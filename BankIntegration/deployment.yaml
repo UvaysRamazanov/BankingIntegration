@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-integration-deployment
+  labels:
+    app: banking-integration
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: banking-integration
+  template:
+    metadata:
+      labels:
+        app: banking-integration
+    spec:
+      containers:
+        - name: banking-integration-container
+          image: docker.io/uvaysramazanov/banking-integration:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
+            - name: TWELVEDATA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: twelvedata-secret
+                  key: api-key
+          volumeMounts:
+            - name: secrets-volume
+              mountPath: /app/secrets
+              readOnly: true
+      volumes:
+        - name: secrets-volume
+          secret:
+            secretName: app-secrets

@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: BankingIntegration
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/BankDB
+    username: postgres
+    password: ${DB_PASSWORD}
+  config:
+    import: optional:file:./secrets.yaml
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+twelvedata:
+  api:
+    url: https://api.twelvedata.com/currency_conversion
+    key: ${TWELVEDATA_API_KEY}
+  config:
+    import: optional:file:./secrets.yaml
